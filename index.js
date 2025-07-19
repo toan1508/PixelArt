@@ -120,3 +120,36 @@ window.onload = () => {
     gridHeight.value = 0;
     gridWidth.value = 0;
 };
+
+let saveBtn = document.getElementById("save-image");
+
+saveBtn.addEventListener("click", () => {
+    let gridColumns = document.querySelectorAll(".gridCol");
+    if (gridColumns.length === 0) {
+        alert("Please create a grid first!");
+        return;
+    }
+
+    const width = parseInt(gridWidth.value);
+    const height = parseInt(gridHeight.value);
+    const cellSize = 20;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width * cellSize;
+    canvas.height = height * cellSize;
+    const ctx = canvas.getContext("2d");
+
+    gridColumns.forEach((cell, index) => {
+        const x = (index % width) * cellSize;
+        const y = Math.floor(index / width) * cellSize;
+        const style = window.getComputedStyle(cell);
+        const color = style.backgroundColor || "#ffffff";
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, cellSize, cellSize);
+    });
+
+    const link = document.createElement("a");
+    link.download = "pixel-art.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+});
